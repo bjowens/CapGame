@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://6vu64mf7gs8"]
 
 [ext_resource type="PackedScene" uid="uid://fcoj3a0cql4w" path="res://Player/test_player.tscn" id="1_567k8"]
-[ext_resource type="PackedScene" path="res://grass1.tscn" id="2_31xqs"]
+[ext_resource type="PackedScene" uid="uid://cqapt706wucqx" path="res://grass1.tscn" id="2_31xqs"]
 
 [node name="Playground" type="Node2D"]
 

@@ -1,16 +1,16 @@
 class_name Player extends CharacterBody2D
 
-var moveSP : float = 100.0
+
 var cardinDirect : Vector2 = Vector2.DOWN
 var direction : Vector2 = Vector2.ZERO
-var State : String = "idle"
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var sprite: Sprite2D = $Sprite2D
-
+@onready var state_machine: PlayerStateMachine = $StateMachine
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	state_machine.Initialize(self)
 	pass # Replace with function body.
 
 
@@ -22,11 +22,7 @@ func _process(delta: float) -> void:
 		Input.get_axis("left","right"),
 		Input.get_axis("up","down")
 	).normalized()
-	velocity = direction*moveSP
 	
-	
-	if setState() == true || setDirection() == true:
-		updateAnimation()
 	
 	
 	
@@ -53,17 +49,12 @@ func setDirection()-> bool:
 	return true
 	
 	
-func setState() -> bool:
-	var newState : String = "idle" if direction == Vector2.ZERO else "walk"
-	if newState == State:
-		return false
-	State = newState
-	return true
+
 	
 	
 	
-func updateAnimation()-> void:
-	animation_player.play(State + "_" + animDirection())
+func updateAnimation(state: String)-> void:
+	animation_player.play(state + "_" + animDirection())
 	
 	
 func animDirection() -> String:
