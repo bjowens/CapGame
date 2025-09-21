@@ -2,11 +2,15 @@ class_name Player extends CharacterBody2D
 
 
 var cardinDirect : Vector2 = Vector2.DOWN
+const DIR_4 = [Vector2.RIGHT,Vector2.DOWN,Vector2.LEFT,Vector2.UP]
 var direction : Vector2 = Vector2.ZERO
+
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var state_machine: PlayerStateMachine = $StateMachine
+
+signal DirectionChanged(new_direction: Vector2)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -32,19 +36,17 @@ func _physics_process(delta: float) -> void:
 
 
 func setDirection()-> bool:
-	var new_dir : Vector2 = cardinDirect
 	if direction == Vector2.ZERO:
 		return false
-	if direction.y == 0:
-		new_dir = Vector2.LEFT if direction.x < 0 else Vector2.RIGHT
-	elif direction.x ==0:
-		new_dir = Vector2.UP if direction.y < 0 else Vector2.DOWN
-	
+		
+	var direction_id:int = int( round( (direction+ cardinDirect*0.1).angle()/TAU*DIR_4.size() ) )
+	var new_dir = DIR_4[direction_id]
 	
 	if new_dir == cardinDirect:
 		return false
 	
 	cardinDirect = new_dir
+	DirectionChanged.emit(new_dir)
 	sprite.scale.x = -1 if cardinDirect == Vector2.LEFT else 1
 	return true
 	

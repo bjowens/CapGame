@@ -10,6 +10,10 @@ var attacking: bool = false
 @onready var attack_animation_player: AnimationPlayer = $"../../Sprite2D/AttackFX/AttackAnimationPlayer"
 @onready var idle: State = $"../Idle"
 @onready var audio: AudioStreamPlayer2D = $"../../Audio/AudioStreamPlayer2D"
+@onready var hurt_box: HurtBox = %AttackHurtBox
+
+
+
 
 #what happens when a player enters/exits this state
 #what happens during the physics process/process and how it handles inputs
@@ -23,11 +27,15 @@ func Enter() -> void:
 	audio.play()
 	
 	attacking = true
+	
+	await get_tree().create_timer(0.075).timeout
+	hurt_box.monitoring = true
 	pass
 	
 func Exit() -> void:
 	animation_player.animation_finished.disconnect(EndAttack)
 	attacking = false
+	hurt_box.monitoring = false
 	pass
 	
 func Process(_delta:float) -> State:
